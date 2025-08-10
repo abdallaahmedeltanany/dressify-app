@@ -19,6 +19,7 @@ interface ButtonProps {
   loading?: boolean;
   style?: StyleProp<ViewStyle>;
   textStyle?: StyleProp<TextStyle>;
+  loadingSpinner?: string;
 }
 const Button: React.FC<ButtonProps> = ({
   title,
@@ -30,6 +31,7 @@ const Button: React.FC<ButtonProps> = ({
   loading = false,
   style,
   textStyle,
+  loadingSpinner,
 }) => {
   const ButtonStyle = [
     styles.button,
@@ -52,7 +54,7 @@ const Button: React.FC<ButtonProps> = ({
           color={
             variant === "primary"
               ? AppColors.background.primary
-              : AppColors.primary[500]
+              : loadingSpinner
           }
         />
       ) : (
