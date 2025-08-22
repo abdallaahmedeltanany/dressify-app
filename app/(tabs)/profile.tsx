@@ -6,6 +6,7 @@ import {
   Feather,
   FontAwesome5,
   Foundation,
+  Ionicons,
   MaterialIcons,
 } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
@@ -79,7 +80,13 @@ const ProfileScreen = () => {
     },
     {
       id: "settings",
-      icon: <Foundation name="home" size={20} color={AppColors.primary[500]} />,
+      icon: (
+        <Ionicons
+          name="settings-sharp"
+          size={20}
+          color={AppColors.primary[500]}
+        />
+      ),
       title: "Settings",
       onPress: () => {},
     },

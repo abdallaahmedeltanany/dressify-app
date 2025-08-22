@@ -3,10 +3,9 @@ import LoadingSpinner from "@/components/LoadingSpinner";
 import ProductCard from "@/components/ProductCard";
 import AppColors from "@/constants/Colors";
 import { useProductsStore } from "@/store/productsStore";
-import { Product } from "@/type";
 import { AntDesign } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo } from "react";
 import {
   FlatList,
   SafeAreaView,
@@ -19,34 +18,33 @@ import {
 
 export default function HomeScreen() {
   const router = useRouter();
-  const [featuredProducts, setFeaturedProducts] = useState<Product[]>([]);
   const {
-    categories,
-    error,
-    fetchCategories,
-    fetchProducts,
-    filterdProducts,
-    loading,
     products,
+    categories,
+    loading,
+    error,
+    fetchProducts,
+    fetchCategories,
   } = useProductsStore();
+
   useEffect(() => {
     fetchProducts();
     fetchCategories();
   }, []);
-  useEffect(() => {
-    if (products.length > 0) {
-      setFeaturedProducts([...products.reverse()]);
-    }
-  }, [products]);
+
+  const featuredProducts = useMemo(() => [...products].reverse(), [products]);
+
   if (loading) return <LoadingSpinner size="large" fullScreen={true} />;
+
   if (error)
     return (
       <SafeAreaView style={styles.container}>
         <View style={styles.errorContainer}>
-          <Text style={styles.errorText}>Error:{error}</Text>
+          <Text style={styles.errorText}>Error: {error}</Text>
         </View>
       </SafeAreaView>
     );
+
   return (
     <View style={styles.wrapper}>
       <HomeHeader />
@@ -60,31 +58,31 @@ export default function HomeScreen() {
               <Text style={styles.sectionTitle}>Categories</Text>
             </View>
             <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-              {categories?.map((category, index) => {
-                return (
-                  <TouchableOpacity
-                    key={index}
-                    style={styles.categoryButton}
-                    onPress={() =>
-                      router.push({
-                        pathname: "/(tabs)/shop",
-                        params: { category: category },
-                      })
-                    }
-                  >
-                    <AntDesign
-                      name="tag"
-                      size={16}
-                      color={AppColors.primary[700]}
-                    />
-                    <Text style={styles.categoryText}>
-                      {category.charAt(0).toUpperCase() + category.slice(1)}
-                    </Text>
-                  </TouchableOpacity>
-                );
-              })}
+              {categories?.map((category, index) => (
+                <TouchableOpacity
+                  key={index}
+                  style={styles.categoryButton}
+                  onPress={() =>
+                    router.push({
+                      pathname: "/(tabs)/shop",
+                      params: { category },
+                    })
+                  }
+                >
+                  <AntDesign
+                    name="tag"
+                    size={16}
+                    color={AppColors.primary[700]}
+                  />
+                  <Text style={styles.categoryText}>
+                    {category.charAt(0).toUpperCase() + category.slice(1)}
+                  </Text>
+                </TouchableOpacity>
+              ))}
             </ScrollView>
           </View>
+
+          {/* Featured Products */}
           <View>
             <View style={styles.sectionHeader}>
               <Text style={styles.sectionTitle}>Featured Products</Text>
@@ -98,15 +96,14 @@ export default function HomeScreen() {
               showsHorizontalScrollIndicator={false}
               contentContainerStyle={styles.featuredProductsContainer}
               keyExtractor={(item) => item.id.toString()}
-              renderItem={({ item }) => {
-                return (
-                  <View style={styles.featuredSection}>
-                    <ProductCard product={item} compact />
-                  </View>
-                );
-              }}
+              renderItem={({ item }) => (
+                <View style={styles.featuredSection}>
+                  <ProductCard product={item} compact />
+                </View>
+              )}
             />
           </View>
+
           <View style={styles.newestSection}>
             <View style={styles.sectionHeader}>
               <Text style={styles.sectionTitle}>Newest Arrival</Text>
@@ -115,16 +112,14 @@ export default function HomeScreen() {
               </TouchableOpacity>
             </View>
             <View style={styles.productsGrid}>
-              {products.reverse().map((product) => {
-                return (
-                  <View key={product.id} style={styles.productContainer}>
-                    <ProductCard
-                      product={product}
-                      customStyle={{ width: "100%" }}
-                    />
-                  </View>
-                );
-              })}
+              {products.map((product) => (
+                <View key={product.id} style={styles.productContainer}>
+                  <ProductCard
+                    product={product}
+                    customStyle={{ width: "100%" }}
+                  />
+                </View>
+              ))}
             </View>
           </View>
         </ScrollView>
@@ -153,7 +148,6 @@ const styles = StyleSheet.create({
     color: "white",
     marginBottom: 24,
   },
-
   sectionHeader: {
     flexDirection: "row",
     justifyContent: "space-between",
@@ -175,7 +169,6 @@ const styles = StyleSheet.create({
     marginTop: 10,
     marginBottom: 16,
   },
-
   categoryButton: {
     flexDirection: "row",
     alignItems: "center",
@@ -196,9 +189,6 @@ const styles = StyleSheet.create({
     marginVertical: 16,
   },
   featuredProductsContainer: {},
-  featuredProductContainer: {
-    // marginHorizontal: 8,
-  },
   newestSection: {
     marginVertical: 16,
     marginBottom: 32,

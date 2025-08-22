@@ -48,3 +48,32 @@ export const getCategories = async (): Promise<string[]> => {
     throw new Error("failed to fetch categories");
   }
 };
+export const getProductsByCategory = async (
+  category: string
+): Promise<Product[]> => {
+  try {
+    const res = await axiosInstance.get(`/products/category/${category}`);
+    return res.data;
+  } catch (error) {
+    console.log(`Failed to fetch products in ${category}`);
+    throw error;
+  }
+};
+export const searchProductsApi = async (query: string): Promise<Product[]> => {
+  try {
+    const response = await axiosInstance.get(`/products`);
+
+    const products = await response.data;
+    const searchTerm = query.toLowerCase().trim();
+
+    return products.filter(
+      (product: Product) =>
+        product.title.toLowerCase().includes(searchTerm) ||
+        product.description.toLowerCase().includes(searchTerm) ||
+        product.category.toLowerCase().includes(searchTerm)
+    );
+  } catch (error) {
+    console.error("Failed to search products:", error);
+    throw error;
+  }
+};

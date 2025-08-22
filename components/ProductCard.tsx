@@ -1,5 +1,6 @@
 import AppColors from "@/constants/Colors";
 import { Product } from "@/type";
+import { AntDesign } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import React from "react";
 import {
@@ -61,6 +62,17 @@ const ProductCard: React.FC<ProductProps> = ({
         </Text>
         <View style={styles.footer}>
           <Text style={styles.price}>${price.toFixed(2)} </Text>
+          <View>
+            <Text style={styles.ratingText}>
+              {rating?.rate}
+              <AntDesign
+                name="star"
+                color={AppColors.accent[500]}
+                fill={AppColors.accent[500]}
+              />
+            </Text>
+            <Text style={styles.ratingText}>Rating: {rating.count}</Text>
+          </View>
           {!compact && (
             <Button
               title="Add to cart"
@@ -129,6 +141,11 @@ const styles = StyleSheet.create({
     fontWeight: "600",
     // marginBottom: 5,
   },
+  ratingText: {
+    fontFamily: "Inter-semiBold",
+    color: AppColors.gray[500],
+  },
+
   footer: {
     justifyContent: "space-between",
   },

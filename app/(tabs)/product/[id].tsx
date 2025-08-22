@@ -4,7 +4,7 @@ import AppColors from "@/constants/Colors";
 import { getProductById } from "@/lib/api";
 import { Product } from "@/type";
 import { useLocalSearchParams } from "expo-router";
-import React, { useEffect, useState } from "react";
+import React, { useLayoutEffect, useState } from "react";
 import {
   Dimensions,
   Image,
@@ -23,7 +23,7 @@ const ProductScreen = () => {
   const [error, setError] = useState<string | null>();
   const [quantity, setQuantity] = useState<number>(1);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const fetchProductById = async () => {
       setIsLoading(true);
       try {

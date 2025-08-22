@@ -31,7 +31,6 @@ export const useAuthStore = create<AuthStore>((set) => ({
       });
 
       if (error) {
-        // ensure we stop loading and return failure
         set({ error: error.message, isLoading: false });
         return false;
       }
@@ -45,7 +44,6 @@ export const useAuthStore = create<AuthStore>((set) => ({
         return true;
       }
 
-      // No user and no explicit error — treat as failure
       set({ error: "Unknown sign in error", isLoading: false });
       return false;
     } catch (err: any) {
