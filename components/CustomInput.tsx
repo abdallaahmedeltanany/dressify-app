@@ -6,8 +6,8 @@ interface CustomInputProps {
   placeholder: string;
   value: string;
   onChangeText: (text: string) => void;
-  label: string;
-  secureTextEntry: boolean;
+  label?: string;
+  secureTextEntry?: boolean;
   keyboardType?: any;
   error?: string;
   textContentType?: any;
@@ -56,10 +56,11 @@ const styles = StyleSheet.create({
   inputContainer: {
     flexDirection: "column",
     justifyContent: "flex-start",
+    flex: 1,
   },
   input: {
-    borderColor: AppColors.text.tertiary,
-    borderWidth: 1,
+    // borderColor: AppColors.text.tertiary,
+    // borderWidth: 1,
     width: "100%",
     height: 50,
     borderRadius: 8,

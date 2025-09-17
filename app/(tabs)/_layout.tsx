@@ -2,13 +2,20 @@ import { HapticTab } from "@/components/HapticTab";
 import { IconSymbol } from "@/components/ui/IconSymbol";
 import AppColors from "@/constants/Colors";
 import { useColorScheme } from "@/hooks/useColorScheme";
+import { useAuthStore } from "@/store/authStore";
 import { Feather, Foundation } from "@expo/vector-icons";
 import { Tabs } from "expo-router";
-import React from "react";
+import React, { useEffect } from "react";
 import { Platform } from "react-native";
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
+  const { checkSession, user } = useAuthStore();
+  useEffect(() => {
+    if (!user) {
+      checkSession();
+    }
+  }, [user]);
 
   return (
     <Tabs
@@ -92,6 +99,15 @@ export default function TabLayout() {
         options={{
           href: null,
           tabBarStyle: { display: "none" },
+        }}
+      />
+      <Tabs.Screen
+        name="payment"
+        options={{
+          href: null,
+          tabBarStyle: {
+            backgroundColor: AppColors.background.secondary,
+          },
         }}
       />
     </Tabs>

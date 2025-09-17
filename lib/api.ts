@@ -77,3 +77,15 @@ export const searchProductsApi = async (query: string): Promise<Product[]> => {
     throw error;
   }
 };
+export const handlePayment = async (payload: any) => {
+  try {
+    const res = await axios.post("http://192.168.1.5:8000/checkout", payload, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    return res.data;
+  } catch (error) {
+    console.log(error);
+  }
+};

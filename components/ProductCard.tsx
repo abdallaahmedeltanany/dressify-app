@@ -1,4 +1,6 @@
 import AppColors from "@/constants/Colors";
+import { useCartStore } from "@/store/cartStore";
+import { useFavoriteStore } from "@/store/favoriteStore";
 import { Product } from "@/type";
 import { AntDesign } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
@@ -14,6 +16,7 @@ import {
 } from "react-native";
 import Toast from "react-native-toast-message";
 import Button from "./Button";
+import Rating from "./Rating";
 
 interface ProductProps {
   product: Product;
@@ -27,8 +30,14 @@ const ProductCard: React.FC<ProductProps> = ({
 }) => {
   const { category, id, description, image, price, rating, title } = product;
   const router = useRouter();
+  const { addItem } = useCartStore();
+  const { isFavorite, toggleFavorite } = useFavoriteStore();
 
-  const handleAddToCart = () => {
+  const isFav = isFavorite(id);
+
+  const handleAddToCart = (e: any) => {
+    e.preventDefault();
+    addItem(product, 1);
     console.log("added to cart", id);
     Toast.show({
       type: "success",
@@ -43,6 +52,9 @@ const ProductCard: React.FC<ProductProps> = ({
       params: { id: String(id) },
     });
   };
+  const handleToggleFavorite = () => {
+    toggleFavorite(product);
+  };
   return (
     <TouchableOpacity
       style={[styles.productCard, compact && styles.compactCard, customStyle]}
@@ -54,6 +66,19 @@ const ProductCard: React.FC<ProductProps> = ({
           style={styles.image}
           resizeMode="contain"
         />
+        <TouchableOpacity
+          style={[
+            styles.favoriteButton,
+            isFav ? { borderRadius: 1 } : { borderRadius: 0 },
+          ]}
+          onPress={handleToggleFavorite}
+        >
+          <AntDesign
+            name="heart"
+            size={25}
+            color={isFav ? AppColors.error : AppColors.gray[300]}
+          />
+        </TouchableOpacity>
       </View>
       <View style={styles.content}>
         <Text style={styles.category}>{category}</Text>
@@ -62,16 +87,18 @@ const ProductCard: React.FC<ProductProps> = ({
         </Text>
         <View style={styles.footer}>
           <Text style={styles.price}>${price.toFixed(2)} </Text>
+          {/* <Text style={styles.ratingText}>
+            Rating:
+            {rating?.rate}
+            <AntDesign
+              name="star"
+              color={AppColors.accent[500]}
+              fill={AppColors.accent[500]}
+            />
+            / ({rating.count})
+          </Text> */}
           <View>
-            <Text style={styles.ratingText}>
-              {rating?.rate}
-              <AntDesign
-                name="star"
-                color={AppColors.accent[500]}
-                fill={AppColors.accent[500]}
-              />
-            </Text>
-            <Text style={styles.ratingText}>Rating: {rating.count}</Text>
+            <Rating rating={rating.rate} count={rating.count} />
           </View>
           {!compact && (
             <Button
@@ -111,6 +138,11 @@ const styles = StyleSheet.create({
     backgroundColor: AppColors.background.primary,
     padding: 5,
   },
+  favoriteButton: {
+    position: "absolute",
+    top: 5,
+    right: 5,
+  },
   image: {
     width: "100%",
     height: "100%",
@@ -144,6 +176,8 @@ const styles = StyleSheet.create({
   ratingText: {
     fontFamily: "Inter-semiBold",
     color: AppColors.gray[500],
+    justifyContent: "center",
+    alignItems: "center",
   },
 
   footer: {

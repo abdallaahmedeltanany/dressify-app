@@ -5,11 +5,11 @@ import React from "react";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
 interface Props {
   isFav?: boolean;
+
   handleToggleFavorite?: () => void;
 }
-const CommonHeader = ({ handleToggleFavorite }: Props) => {
+const CommonHeader = ({ handleToggleFavorite, isFav }: Props) => {
   const router = useRouter();
-  const isFav = false;
 
   const handleGoBack = () => {
     if (router.canGoBack()) {
@@ -27,13 +27,12 @@ const CommonHeader = ({ handleToggleFavorite }: Props) => {
       <View style={styles.ButtonsView}>
         <TouchableOpacity
           style={[styles.FavButton, isFav && styles.activeFavoriteButton]}
+          onPress={handleToggleFavorite}
         >
           <AntDesign
-            name="hearto"
+            name="heart"
             size={20}
-            color={
-              isFav ? AppColors.background.primary : AppColors.text.primary
-            }
+            color={isFav ? AppColors.error : AppColors.text.primary}
             fill={isFav ? AppColors.background.primary : "transparent"}
           />
         </TouchableOpacity>
@@ -93,6 +92,6 @@ const styles = StyleSheet.create({
     gap: 5,
   },
   activeFavoriteButton: {
-    backgroundColor: AppColors.error,
+    // color: AppColors.error,
   },
 });

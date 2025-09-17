@@ -1,4 +1,6 @@
 import AppColors from "@/constants/Colors";
+import { useCartStore } from "@/store/cartStore";
+import { useFavoriteStore } from "@/store/favoriteStore";
 import { AntDesign, MaterialCommunityIcons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import React from "react";
@@ -14,6 +16,9 @@ import Logo from "./Logo";
 
 const HomeHeader = () => {
   const router = useRouter();
+  const { items } = useCartStore();
+  const { favoriteItems } = useFavoriteStore();
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
@@ -23,11 +28,7 @@ const HomeHeader = () => {
             style={styles.searchButton}
             onPress={() => router.push("/(tabs)/search")}
           >
-            <AntDesign
-              name="search1"
-              size={20}
-              color={AppColors.primary[700]}
-            />
+            <AntDesign name="search" size={20} color={AppColors.primary[700]} />
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.searchButton}
@@ -39,7 +40,9 @@ const HomeHeader = () => {
               color={AppColors.primary[700]}
             />
             <View style={styles.itemsView}>
-              <Text style={styles.itemsText}>0</Text>
+              <Text style={styles.itemsText}>
+                {favoriteItems.length > 0 ? favoriteItems.length : 0}
+              </Text>
             </View>
           </TouchableOpacity>
           <TouchableOpacity
@@ -52,7 +55,9 @@ const HomeHeader = () => {
               color={AppColors.primary[700]}
             />
             <View style={styles.itemsView}>
-              <Text style={styles.itemsText}>0</Text>
+              <Text style={styles.itemsText}>
+                {items.length > 0 ? items.length : 0}
+              </Text>
             </View>
           </TouchableOpacity>
         </View>

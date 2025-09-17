@@ -23,11 +23,11 @@ const EmptyState: React.FC<EmptyStateProps> = ({
   const getIcon = () => {
     switch (type) {
       case "cart":
-        return <AntDesign name="shoppingcart" size={size} color={color} />;
+        return <AntDesign name="shopping-cart" size={size} color={color} />;
       case "search":
-        return <AntDesign name="search1" size={size} color={color} />;
+        return <AntDesign name="file-search" size={size} color={color} />;
       case "favorites":
-        return <AntDesign name="hearto" size={size} color={color} />;
+        return <AntDesign name="heart" size={size} color={color} />;
       default:
         return <AntDesign name="user" size={size} color={color} />;
     }
@@ -48,7 +48,9 @@ const EmptyState: React.FC<EmptyStateProps> = ({
   return (
     <View style={styles.container}>
       <Text style={styles.iconContainer}>{getIcon()}</Text>
-      <Text style={styles.message}>{getDefaultMessage()}</Text>
+      <Text style={styles.message}>
+        {message ? message : getDefaultMessage()}
+      </Text>
       {actionLabel && onAction && (
         <Button
           title={actionLabel}

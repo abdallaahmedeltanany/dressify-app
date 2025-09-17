@@ -1,9 +1,14 @@
+import Button from "@/components/Button";
 import CommonHeader from "@/components/CommonHeader";
+import LoadingSpinner from "@/components/LoadingSpinner";
 import Rating from "@/components/Rating";
 import AppColors from "@/constants/Colors";
 import { getProductById } from "@/lib/api";
+import { useCartStore } from "@/store/cartStore";
+import { useFavoriteStore } from "@/store/favoriteStore";
 import { Product } from "@/type";
-import { useLocalSearchParams } from "expo-router";
+import { AntDesign } from "@expo/vector-icons";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useLayoutEffect, useState } from "react";
 import {
   Dimensions,
@@ -11,10 +16,11 @@ import {
   ScrollView,
   StyleSheet,
   Text,
+  TouchableOpacity,
   View,
 } from "react-native";
+import Toast from "react-native-toast-message";
 const { width } = Dimensions.get("window");
-const { height } = Dimensions.get("window");
 
 const ProductScreen = () => {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -22,6 +28,10 @@ const ProductScreen = () => {
   const [isloading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>();
   const [quantity, setQuantity] = useState<number>(1);
+  const Router = useRouter();
+  const { isFavorite, toggleFavorite } = useFavoriteStore();
+  const { addItem } = useCartStore();
+  const isFav = isFavorite(Number(id));
 
   useLayoutEffect(() => {
     const fetchProductById = async () => {
@@ -37,7 +47,31 @@ const ProductScreen = () => {
     };
     fetchProductById();
   }, [id]);
+  const handleToggleFavorite = () => {
+    if (!product) return;
+    toggleFavorite(product);
+  };
 
+  const handleAddToCart = () => {
+    if (!product) return;
+    addItem(product, quantity);
+    Toast.show({
+      type: "success",
+      text1: "Product added to cart",
+      text2: `${product.title} has been added to your cart`,
+      visibilityTime: 2000,
+    });
+  };
+  if (isloading) return <LoadingSpinner fullScreen />;
+
+  if (error) {
+    return (
+      <View style={styles.errorContainer}>
+        <Text style={styles.errorText}>{error}</Text>
+        <Button title="Go back" onPress={() => Router.back()} />
+      </View>
+    );
+  }
   return (
     <>
       <View
@@ -47,7 +81,10 @@ const ProductScreen = () => {
           backgroundColor: AppColors.background.primary,
         }}
       >
-        <CommonHeader />
+        <CommonHeader
+          isFav={isFav}
+          handleToggleFavorite={handleToggleFavorite}
+        />
       </View>
       <ScrollView>
         <View style={styles.imageContainer}>
@@ -70,9 +107,55 @@ const ProductScreen = () => {
           <View style={styles.divider} />
           <Text style={styles.descriptionTitle}>Description</Text>
           <Text style={styles.description}>{product?.description}</Text>
+          <View style={styles.divider} />
+          <View style={styles.quantityContainer}>
+            <Text style={styles.quantityTitle}>Quantity</Text>
+            <View style={styles.quantityControls}>
+              <TouchableOpacity
+                style={styles.quantityButton}
+                onPress={() =>
+                  setQuantity((prevQuantity) =>
+                    prevQuantity > 1 ? prevQuantity - 1 : prevQuantity
+                  )
+                }
+                disabled={quantity === 1}
+              >
+                <AntDesign
+                  name="minus"
+                  size={20}
+                  color={AppColors.primary[500]}
+                />
+              </TouchableOpacity>
+              <Text style={styles.quantityValue}>{quantity}</Text>
+              <TouchableOpacity
+                style={styles.quantityButton}
+                onPress={() => setQuantity((prevQuantity) => prevQuantity + 1)}
+              >
+                <AntDesign
+                  name="plus"
+                  size={20}
+                  color={AppColors.primary[500]}
+                />
+              </TouchableOpacity>
+            </View>
+          </View>
         </View>
-        <View style={styles.divider} />
       </ScrollView>
+      <View style={styles.footer}>
+        <Text style={styles.totalPrice}>
+          Total: $
+          {product?.price !== undefined
+            ? (product.price * quantity).toFixed(2)
+            : "0.00"}
+        </Text>
+        <Button
+          title="Add to cart"
+          variant="primary"
+          fullWidth
+          onPress={handleAddToCart}
+          style={styles.addToCartButton}
+        />
+      </View>
     </>
   );
 };
@@ -174,7 +257,7 @@ const styles = StyleSheet.create({
   },
   footer: {
     position: "absolute",
-    bottom: 50,
+    bottom: 0,
     left: 0,
     right: 0,
     backgroundColor: AppColors.background.primary,

@@ -11,7 +11,7 @@ import {
 } from "react-native";
 interface ButtonProps {
   title: string;
-  onPress: () => void;
+  onPress: (e: any) => void;
   variant?: "primary" | "secondary" | "outline" | "ghost";
   size?: "small" | "medium" | "large";
   fullWidth?: boolean;

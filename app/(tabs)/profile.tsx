@@ -31,6 +31,7 @@ const ProfileScreen = () => {
       checkSession();
     }
   }, [user]);
+
   const menuItems = [
     {
       id: "cart",

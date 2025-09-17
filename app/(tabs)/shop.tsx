@@ -75,7 +75,7 @@ const ShopScreen = () => {
               </View>
             </View>
             <View style={styles.searchButton}>
-              <AntDesign name="search1" size={24} color="white" />
+              <AntDesign name="search" size={24} color="white" />
             </View>
           </TouchableOpacity>
           <TouchableOpacity
