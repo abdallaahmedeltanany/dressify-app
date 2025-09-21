@@ -22,7 +22,6 @@ const LoginScreen = () => {
   const [password, setPassword] = useState("");
   const { error, isLoading, login } = useAuthStore();
   const handleSignin = async () => {
-    // Validate first
     if (!email || !password) {
       Toast.show({
         type: "error",

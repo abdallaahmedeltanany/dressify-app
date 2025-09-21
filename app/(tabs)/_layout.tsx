@@ -98,7 +98,6 @@ export default function TabLayout() {
         name="orders"
         options={{
           href: null,
-          tabBarStyle: { display: "none" },
         }}
       />
       <Tabs.Screen

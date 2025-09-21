@@ -43,7 +43,9 @@ const PaymentScreen = () => {
           title="View order"
           style={{ width: "90%" }}
           size="small"
-          onPress={() => {}}
+          onPress={() => {
+            router.push("/(tabs)/orders");
+          }}
         />
       </View>
     </View>

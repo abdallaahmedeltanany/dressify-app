@@ -1,5 +1,4 @@
 import HomeHeader from "@/components/HomeHeader";
-import LoadingSpinner from "@/components/LoadingSpinner";
 import ProductCard from "@/components/ProductCard";
 import AppColors from "@/constants/Colors";
 import { useProductsStore } from "@/store/productsStore";
@@ -8,6 +7,7 @@ import { useRouter } from "expo-router";
 import { useEffect, useMemo } from "react";
 import {
   FlatList,
+  RefreshControl,
   SafeAreaView,
   ScrollView,
   StyleSheet,
@@ -31,10 +31,14 @@ export default function HomeScreen() {
     fetchProducts();
     fetchCategories();
   }, []);
+  const handleRefresh = () => {
+    fetchProducts();
+    fetchCategories();
+  };
 
   const featuredProducts = useMemo(() => [...products].reverse(), [products]);
 
-  if (loading) return <LoadingSpinner size="large" fullScreen={true} />;
+  // if (loading) return <LoadingSpinner size="large" fullScreen={true} />;
 
   if (error)
     return (
@@ -52,6 +56,13 @@ export default function HomeScreen() {
         <ScrollView
           showsVerticalScrollIndicator={false}
           contentContainerStyle={styles.scrollContainerView}
+          refreshControl={
+            <RefreshControl
+              refreshing={loading}
+              onRefresh={() => handleRefresh()}
+              tintColor={AppColors.primary[400]}
+            />
+          }
         >
           <View style={styles.categoriesSection}>
             <View style={styles.sectionHeader}>
