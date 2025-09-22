@@ -6,7 +6,6 @@ import {
   Feather,
   FontAwesome5,
   Foundation,
-  Ionicons,
   MaterialIcons,
 } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
@@ -60,36 +59,6 @@ const ProfileScreen = () => {
       onPress: () => {
         router.push("/(tabs)/orders");
       },
-    },
-    {
-      id: "payment",
-      icon: (
-        <Foundation
-          name="credit-card"
-          size={20}
-          color={AppColors.primary[500]}
-        />
-      ),
-      title: "Payment Methods",
-      onPress: () => {},
-    },
-    {
-      id: "address",
-      icon: <Foundation name="home" size={20} color={AppColors.primary[500]} />,
-      title: "Shipping Addresses",
-      onPress: () => {},
-    },
-    {
-      id: "settings",
-      icon: (
-        <Ionicons
-          name="settings-sharp"
-          size={20}
-          color={AppColors.primary[500]}
-        />
-      ),
-      title: "Settings",
-      onPress: () => {},
     },
   ];
 

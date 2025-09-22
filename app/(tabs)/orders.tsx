@@ -1,25 +1,40 @@
-import CartItemCard from "@/components/CartItemCard";
+import Button from "@/components/Button";
 import EmptyState from "@/components/EmptyState";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import OrderCard from "@/components/OrderCard";
+import OrderDetailsCard from "@/components/OrderDetailsCard";
 import Wrapper from "@/components/Wrapper";
 import AppColors from "@/constants/Colors";
 import { supabase } from "@/lib/supabase";
 import { useAuthStore } from "@/store/authStore";
-import { Product } from "@/type";
+import { AntDesign } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
-import { Alert, FlatList, StyleSheet, Text, View } from "react-native";
+import {
+  Alert,
+  FlatList,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import Modal from "react-native-modal";
 import Toast from "react-native-toast-message";
+export interface OrderItems {
+  product_id: number;
+  title: string;
+  price: number;
+  quantity: number;
+  image: string;
+}
 export interface Order {
   id: number;
-  user_email: string;
-  created_at: string;
-  total_price: string;
+  total_price: number;
   payment_status: string;
-  items: Product[];
+  created_at: string;
+  items: OrderItems[];
 }
+
 const OrdersScreen = () => {
   const { user } = useAuthStore();
   const router = useRouter();
@@ -104,7 +119,6 @@ const OrdersScreen = () => {
   useEffect(() => {
     fetchOrders();
   }, [user]);
-  console.log(selectedOrder);
   if (loading) return <LoadingSpinner fullScreen />;
   return (
     <Wrapper>
@@ -112,6 +126,12 @@ const OrdersScreen = () => {
 
       <Modal isVisible={showModal} style={styles.modalOverlay}>
         <View style={styles.modal}>
+          <TouchableOpacity
+            style={styles.closeIcon}
+            onPress={() => setShowModal(false)}
+          >
+            <AntDesign name="close" color={AppColors.gray[400]} size={20} />
+          </TouchableOpacity>
           <View style={styles.modalContainer}>
             <Text style={styles.title}>Order #{selectedOrder?.id} Details</Text>
             <Text style={styles.infoText}>
@@ -129,11 +149,23 @@ const OrdersScreen = () => {
             <Text style={styles.itemsHeader}>Items:</Text>
             <FlatList
               data={selectedOrder?.items}
-              keyExtractor={(item) => String(item.id)}
+              keyExtractor={(item) => item.product_id.toString()}
               renderItem={({ item }) => {
-                return <CartItemCard product={item} />;
+                return (
+                  <OrderDetailsCard product={item} quantity={item.quantity} />
+                );
               }}
             />
+            <View style={styles.actionButtons}>
+              <Button
+                title="Close"
+                style={{
+                  backgroundColor: AppColors.error,
+                  width: "40%",
+                }}
+                onPress={() => setShowModal(false)}
+              />
+            </View>
           </View>
         </View>
       </Modal>
@@ -176,6 +208,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+    position: "relative",
   },
   modal: {
     width: "95%",
@@ -201,5 +234,19 @@ const styles = StyleSheet.create({
     fontFamily: "Inter-SemiBold",
     fontSize: 16,
     color: AppColors.text.primary,
+  },
+  closeIcon: {
+    position: "absolute",
+    top: 10,
+    right: 10,
+  },
+  actionButtons: {
+    display: "flex",
+    flexDirection: "row",
+    gap: 20,
+    width: "100%",
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 10,
   },
 });

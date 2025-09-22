@@ -61,7 +61,7 @@ const OrderCard = ({ order, onDelete, openModal }: OrderCardProps) => {
       <View style={styles.actionContainer}>
         <Button
           title="View Details"
-          onPress={() => console.log("hello")}
+          onPress={() => openModal(order)}
           style={{ width: "50%" }}
         />
         {order.payment_status === "pending" && (
