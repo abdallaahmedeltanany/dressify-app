@@ -79,6 +79,7 @@ const ProfileScreen = () => {
               text2: "You have been logged out",
               visibilityTime: 2000,
             });
+            router.replace("/(tabs)/login");
           } catch (error) {
             console.error("Profile: Error during logout:", error);
             Alert.alert("Logout Error", "An unexpected error occurred");
