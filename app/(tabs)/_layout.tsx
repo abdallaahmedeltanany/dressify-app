@@ -34,7 +34,7 @@ export default function TabLayout() {
       }}
     >
       <Tabs.Screen
-        name="index"
+        name="home"
         options={{
           title: "Home",
           tabBarIcon: ({ color }) => (
@@ -80,20 +80,20 @@ export default function TabLayout() {
           tabBarStyle: { display: "none" },
         }}
       />
-      <Tabs.Screen
+      {/* <Tabs.Screen
         name="login"
         options={{
           href: null,
           tabBarStyle: { display: "none" },
         }}
-      />
-      <Tabs.Screen
+      /> */}
+      {/* <Tabs.Screen
         name="signup"
         options={{
           href: null,
           tabBarStyle: { display: "none" },
         }}
-      />
+      /> */}
       <Tabs.Screen
         name="orders"
         options={{

@@ -2,19 +2,25 @@ import AppColors from "@/constants/Colors";
 import { useAuthStore } from "@/store/authStore";
 import { useRouter } from "expo-router";
 import LottieView from "lottie-react-native";
-import React, { useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import { Dimensions, StatusBar, StyleSheet, Text, View } from "react-native";
 const { width, height } = Dimensions.get("window");
 
 const SplashScreen = () => {
-  const { user } = useAuthStore();
+  const { user, checkSession } = useAuthStore();
   const router = useRouter();
   const animationRef = useRef(null);
-  const onAnimationFinish = () => {
+  useEffect(() => {
     if (!user) {
-      router.replace("/(tabs)/login");
+      checkSession();
+    }
+  }, []);
+  const onAnimationFinish = () => {
+    console.log(user);
+    if (!user) {
+      router.replace("/(auth)/login");
     } else {
-      router.replace("/(tabs)");
+      router.replace("/(tabs)/home");
     }
   };
 
@@ -25,10 +31,10 @@ const SplashScreen = () => {
 
       <LottieView
         ref={animationRef}
-        source={require("../assets/animations/Splash.json")}
+        source={require("../../assets/animations/Splash.json")}
         style={styles.animation}
         autoPlay={true}
-        loop={true}
+        loop={false}
         speed={2}
         onAnimationFinish={onAnimationFinish}
         resizeMode="contain"

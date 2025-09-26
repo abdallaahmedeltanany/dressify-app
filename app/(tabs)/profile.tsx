@@ -79,7 +79,7 @@ const ProfileScreen = () => {
               text2: "You have been logged out",
               visibilityTime: 2000,
             });
-            router.replace("/(tabs)/login");
+            router.replace("/(auth)/login");
           } catch (error) {
             console.error("Profile: Error during logout:", error);
             Alert.alert("Logout Error", "An unexpected error occurred");
@@ -155,7 +155,7 @@ const ProfileScreen = () => {
               fullWidth
               size="small"
               onPress={() => {
-                router.push("/(tabs)/login");
+                router.push("/(auth)/login");
               }}
             />
             <Button
@@ -163,7 +163,7 @@ const ProfileScreen = () => {
               variant="outline"
               size="small"
               onPress={() => {
-                router.push("/(tabs)/signup");
+                router.push("/(auth)/signup");
               }}
             />
           </View>

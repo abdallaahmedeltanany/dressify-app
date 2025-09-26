@@ -40,7 +40,7 @@ const LoginScreen = () => {
           text1: "Signed in successfully",
           text2: "Welcome back!",
         });
-        router.push("/");
+        router.replace("/(tabs)/home");
         setEmail("");
         setPassword("");
       } else {
@@ -103,7 +103,7 @@ const LoginScreen = () => {
               />
               <View style={styles.innerContainer}>
                 <Text style={styles.text}>Don&apos;t have an account?</Text>
-                <TouchableOpacity onPress={() => router.push("/(tabs)/signup")}>
+                <TouchableOpacity onPress={() => router.push("/(auth)/signup")}>
                   <Text style={styles.buttonText}>Sign up</Text>
                 </TouchableOpacity>
               </View>

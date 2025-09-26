@@ -91,7 +91,7 @@ const SignupScreen = () => {
         text1: "Sign up successfully",
         text2: "your account was created successfully",
       });
-      router.push("/(tabs)/login");
+      router.push("/(auth)/login");
       setEmail("");
       setPassword("");
       setConfirmPassword("");
@@ -102,6 +102,10 @@ const SignupScreen = () => {
         text2: "Something went wrong. Please try again.",
       });
     }
+  };
+  const handleLoginRouter = () => {
+    router.dismissAll();
+    router.replace("/(auth)/login");
   };
 
   return (
@@ -167,7 +171,7 @@ const SignupScreen = () => {
               />
               <View style={styles.innerContainer}>
                 <Text style={styles.text}>Already have an account?</Text>
-                <TouchableOpacity onPress={() => router.push("/(tabs)/login")}>
+                <TouchableOpacity onPress={handleLoginRouter}>
                   <Text style={styles.buttonText}>Sign in</Text>
                 </TouchableOpacity>
               </View>

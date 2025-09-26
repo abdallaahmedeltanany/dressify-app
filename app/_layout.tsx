@@ -1,7 +1,7 @@
 import { StripeProvider } from "@stripe/stripe-react-native";
 import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
-import { StatusBar } from "react-native";
+import { Platform, StatusBar } from "react-native";
 import Toast from "react-native-toast-message";
 
 export default function RootLayout() {
@@ -19,12 +19,15 @@ export default function RootLayout() {
   return (
     <StripeProvider publishableKey={publishableKey}>
       <Stack>
-        <Stack.Screen name="index" options={{ headerShown: false }} />
+        <Stack.Screen name="(splash)" options={{ headerShown: false }} />
+        <Stack.Screen name="(auth)" options={{ headerShown: false }} />
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         <Stack.Screen name="+not-found" />
       </Stack>
       <Toast />
-      <StatusBar barStyle="dark-content" />
+      <StatusBar
+        barStyle={Platform.OS === "android" ? "default" : "dark-content"}
+      />
     </StripeProvider>
   );
 }
